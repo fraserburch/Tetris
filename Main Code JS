@@ -1,0 +1,263 @@
+//assign brick numbers and then add it so that it so that it deletes the correct one
+// but puts one that equals zero to fill the spot
+// difficulty figuring out h
+
+
+var xloc = 120; // location of the slider
+var xpos = 21;
+var ypos = 63.1;
+var xposOriginal = 63.1;
+var yposOriginal = 63.1;
+var radius = 20;
+
+
+var win = 0;
+ var brick1 = [0, 0, 80, 20]; 
+  var brick2 = [80, 0, 80, 20];
+  var brick3 = [160, 0, 80, 20];
+  var brick4 = [240, 0, 80, 20];
+  var brick5 = [0, 20, 80, 20];
+  var brick6 = [80, 20, 80, 20];
+  var brick7 = [160, 20, 80, 20];
+  var brick8 = [240, 20, 80, 20];
+  var brickThere = [];
+  var brickNum = 8;
+  function createVeracityBrick(){
+    for(var i = 0; i < brickNum; i++){
+      appendItem(brickThere, true);
+    }
+    
+  }
+  
+ 
+ var allBricks = [brick5, brick6, brick7, brick8, brick1, brick2, brick3, brick4];
+
+
+function constrain(input, low, high){
+  var output;
+  if (input < low) {
+    output = low;
+  } else if (input > high) {
+    output = high;
+  } else {
+    output = input;
+  }
+  return output;
+}
+//updates the slider
+function updateTurtle(){
+  xloc = constrain(xloc, 0,240);
+  setPosition("slider", xloc, 430);
+}
+//actually move
+onEvent("gameScreen", "keydown", function(event) {
+  if (event.key == "Left") {
+    xloc = xloc - 17.5;
+      setPosition("slider", xloc, 430);
+  } 
+  
+  else if (event.key == "Right") {
+    xloc = xloc + 17.5;
+      setPosition("slider", xloc, 430);
+
+  }
+  
+  updateTurtle();
+});
+var lives = 3;
+
+//StartScreen
+onEvent("startButton","click", function(){
+  setGame();
+  setInterval(draw2, 1);
+  setStrokeColor("white");
+  setFillColor("#0dff00");
+}); 
+
+function setGame(){
+  setScreen("gameScreen");
+  allBricks = [brick5, brick6, brick7, brick8, brick1, brick2, brick3, brick4];
+  createVeracityBrick();
+  createCanvas("gameCanvas1", 320, 450);
+  setActiveCanvas("gameCanvas1");
+}
+
+function draw2(){
+setStrokeColor("#ffff1a");
+setFillColor("#ff3300");
+    if(xpos > 299 || xpos < 21){
+      changeVelocityX();
+    } else if(ypos < 0){
+      changeVelocityY();
+    }
+    checkLives();
+    hit();
+    if(checkWin() === true){
+      setScreen("winScreen");
+      
+       playSound("Correct answer congratulations!!!!.mp3", true);
+    }
+    setStrokeColor("black");
+    clearCanvas();
+    xpos += xVelocity;
+    ypos += yVelocity;
+   for (var i = 0; i<allBricks.length; i++){
+     rect(allBricks[i][0],allBricks[i][1],allBricks[i][2],allBricks[i][3]);
+   }
+    
+     if(ypos > 20 - radius && ypos < 40 + radius && 0 < xpos && xpos < 80 && brickThere[0]) {
+      changeVelocityY();
+      brickThere[0] = false;
+      replaceBrick(0);
+      
+      
+     }
+     
+    else if(ypos > 20 -radius && ypos < 40 + radius  &&  80 < xpos  &&  xpos < 160 && brickThere[1]) {
+      changeVelocityY();
+      brickThere[1] = false;
+      replaceBrick(1);
+          }
+     else if(ypos > 20 - radius && ypos < 40 + radius &&  160 < xpos  &&  xpos < 240 && brickThere[2]) {
+       changeVelocityY();
+      brickThere[2] = false;
+      replaceBrick(2);
+     
+       }
+     else if(ypos > 20 - radius && ypos < 40 + radius &&  240 < xpos  &&  xpos < 320 && brickThere[3]) {
+       changeVelocityY();
+       brickThere[3] = false;
+       replaceBrick(3);
+       
+     }
+      else if(ypos > 0 - radius && ypos < 20 + radius  &&  0 < xpos  &&  xpos < 80 && brickThere[4]) {
+      changeVelocityY();
+      brickThere[4] = false;
+      replaceBrick(4);
+      
+          }
+      else if(ypos > 0 - radius && ypos < 20 + radius  &&  80 < xpos  &&  xpos < 160 && brickThere[5]) {
+      changeVelocityY();
+      brickThere[5] = false;
+      replaceBrick(5);
+    
+          }
+      else if(ypos > 0 - radius && ypos < 20 + radius  &&  160 < xpos  &&  xpos < 240 && brickThere[6]) {
+      changeVelocityY();
+      brickThere[6] = false;
+      replaceBrick(6);
+      
+          }
+      else if(ypos > 0 - radius && ypos < 20 + radius  &&  240 < xpos  &&  xpos < 320 && brickThere[7]) {
+      changeVelocityY();
+      replaceBrick(7);
+      brickThere[7] = false;
+          }
+     else if(ypos > 20 - radius && ypos < 40 + radius && 0 + radius < xpos && xpos < 80 + radius && brickThere[0]) {
+      changeVelocityX();
+      brickThere[0] = false;
+      replaceBrick(0);
+      
+     }
+     
+    else if(ypos > 20 - radius && ypos < 40 + radius  &&  80 + radius < xpos  &&  xpos < 160 + radius && brickThere[1]) {
+      changeVelocityX();
+      brickThere[1] = false;
+      replaceBrick(1);
+          }
+     else if(ypos > 20 - radius && ypos < 40 + radius &&  160 + radius < xpos  &&  xpos < 240 + radius && brickThere[2]) {
+       changeVelocityX();
+      brickThere[2] = false;
+      replaceBrick(2);
+     
+       }
+     else if(ypos > 20 - radius && ypos < 40 + radius &&  240 + radius < xpos  &&  xpos < 320 + radius && brickThere[3]) {
+       changeVelocityX();
+       brickThere[3] = false;
+       replaceBrick(3);
+       
+     }
+      else if(ypos > 0 - radius && ypos < 20 + radius  &&  0 + radius < xpos  &&  xpos < 80 + radius && brickThere[4]) {
+      changeVelocityX();
+      brickThere[4] = false;
+      replaceBrick(4);
+      
+          }
+      else if(ypos > 0 - radius && ypos < 20 + radius  &&  80 + radius < xpos  &&  xpos < 160 + radius && brickThere[5]) {
+      changeVelocityX();
+      brickThere[5] = false;
+      replaceBrick(5);
+    
+          }
+      else if(ypos > 0 - radius && ypos < 20 + radius  &&  160 + radius < xpos  &&  xpos < 240 + radius && brickThere[6]) {
+      changeVelocityX();
+      brickThere[6] = false;
+      replaceBrick(6);
+      
+          }
+      else if(ypos > 0 - radius && ypos < 20 + radius  &&  240 + radius < xpos  &&  xpos < 320 + radius && brickThere[7]) {
+      changeVelocityX();
+      replaceBrick(7);
+      brickThere[7] = false;
+          }      
+
+    setStrokeColor("white");
+    setFillColor("#0dff00");
+    circle(xpos, ypos, radius);
+    setStrokeColor("white");
+}
+function checkWin(){
+  for(var i = 0; i < brickNum; i++){
+    if(brickThere[i] === true){
+      return false;
+    }
+  }
+  return true;
+}
+
+function checkLives(){
+  if(ypos > 450){
+    lives--;
+    xpos = 20.9;
+    ypos = 63.1; 
+    xVelocity = originalXVel;
+    yVelocity = originalYVel;
+  }
+  if(lives <= 0){
+    setScreen("gameOver");
+  }
+  setText("livesLabel", "Lives: " + lives);
+  
+}
+function replaceBrick(index){
+  removeItem(allBricks, index);
+  insertItem(allBricks, index, [0,0,0,0]);
+}
+
+//can change velocity not the other ones because they are calculated from it
+var originalXVel = 1.5;
+var originalYVel = 1.5;
+var xVelocity = originalXVel;
+var yVelocity = originalYVel;
+
+function hit(){
+  if(xloc < xpos && xloc + 80 > xpos && ypos < 438 && ypos > 418 ){
+    changeVelocityY();
+  } else if(xloc < xpos && xloc + 80 < xpos && ypos < 438 && ypos > 418 ){
+    changeVelocityX();
+  }
+}
+
+
+
+
+//turns the ball around
+function changeVelocityX(){
+  xVelocity = -xVelocity;
+  
+}
+
+function changeVelocityY(){
+  yVelocity = -yVelocity;
+  
+}
